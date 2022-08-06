@@ -67,6 +67,7 @@ function createTicket(ticketColor, data, ticketId){
 
     handleRemoval(ticketCont, id);
     handleLock(ticketCont, id);
+    handlePriorityColor(ticketCont, id);
 }
 
 //getting data from local storage
@@ -136,6 +137,27 @@ function handleRemoval(ticketCont, id){
 function getTicketidx(id){
     let idx = ticketsArr.findIndex(ticketObj => ticketObj.ticketId == id);
     return idx;
+}
+
+//change the priority of the ticketColor in ticketCont
+function handlePriorityColor (ticketCont, id) {
+    let ticketColorCont = ticketCont.querySelector(".ticket-color")
+
+    ticketColorCont.addEventListener("click", () => {
+        let currColor = ticketColorCont.classList[1];
+        let currColoridx = colors.indexOf(currColor);
+        let newTicketColoridx = (currColoridx + 1) % colors.length;
+        let newTicketColor = colors[newTicketColoridx];
+        ticketColorCont.classList.remove(currColor);
+        ticketColorCont.classList.add(newTicketColor);
+
+        //update on local storage
+        let idx = getTicketidx(id);
+        console.log(idx);
+        ticketsArr[idx].ticketColor = newTicketColor;
+        localStorage.setItem("tickets", JSON.stringify(ticketsArr));
+    })
+
 }
 
 //unlock class->fa-lock-open
